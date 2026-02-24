@@ -1,0 +1,24 @@
+---
+import HeroHorizontal from '../components/sections/HeroScroll/HeroHorizontal.astro';
+import ProjectsSection from '../components/sections/ProjectsSection.astro';
+import IdentitySection from "../components/sections/IdentitySection.astro";
+---
+
+<html lang="en">
+  <head>
+    <title>Jeronimo Nunez | Frontend Architect</title>
+  </head>
+
+  <body>
+    <main>
+      <HeroHorizontal />
+      <IdentitySection />
+      <ProjectsSection />
+    </main>
+
+    <script type="module">
+  import "/src/scripts/scroll/reveal.client.ts";
+</script>
+
+  </body>
+</html>

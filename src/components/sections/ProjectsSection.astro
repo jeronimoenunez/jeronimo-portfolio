@@ -1,0 +1,21 @@
+---
+import { projects } from '../../content/projects';
+import ProjectCard from '../ui/ProjectCard.astro';
+---
+
+<section>
+  <h2>Selected Projects</h2>
+
+  <div class="projects-grid">
+    {projects.map((project) => (
+      <ProjectCard project={project} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+</style>
