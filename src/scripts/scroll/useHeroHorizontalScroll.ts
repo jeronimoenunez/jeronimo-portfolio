@@ -1,128 +1,98 @@
-export function useHeroHorizontalScroll(root: HTMLElement) {
-  const sticky = root.querySelector<HTMLElement>("[data-type-layer]");
-  const track = root.querySelector<HTMLElement>("[data-track]");
-  const videoLayer = root.querySelector<HTMLElement>("[data-video-layer]");
+type ScrubOptions = {
+  /** mapea progreso de scroll 0..1 a progreso del video 0..1 */
+  mapProgress?: (p: number) => number;
+
+  /** smoothing base (0..1). Más alto = más “pegado” */
+  smoothing?: number | ((p: number) => number);
+
+  /** recorta el rango del video (0..1) */
+  range?: { from: number; to: number };
+
+  /** evita tocar el último frame (glitches) */
+  endPaddingSeconds?: number;
+};
+
+export function useHeroHorizontalScroll(root: HTMLElement, opts: ScrubOptions = {}) {
   const video = root.querySelector<HTMLVideoElement>("[data-video]");
+  if (!video) return;
 
-  if (!sticky || !track || !videoLayer) {
-    throw new Error("HeroScroll: required DOM elements missing");
-  }
+  const clamp = (v: number, a: number, b: number) => Math.min(Math.max(v, a), b);
 
-  // 🔒 Narrowing definitivo (TypeScript-safe)
-  const stickyEl = sticky;
-  const trackEl = track;
-  const videoLayerEl = videoLayer;
-  const videoEl = video ?? undefined;
+  let raf: number | null = null;
+  let duration = 0;
+  let ready = false;
+  let unlocked = false;
 
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
+  const mapProgress = opts.mapProgress ?? ((p) => p);
+  const smoothing = opts.smoothing ?? 0.12;
+  const range = opts.range ?? { from: 0, to: 1 };
+  const endPad = opts.endPaddingSeconds ?? 0.05;
 
-  root.querySelectorAll<HTMLElement>("[data-word]").forEach((el) => {
-    el.setAttribute("data-text", el.textContent?.trim() ?? "");
-  });
+  const onMeta = () => {
+    duration = Number.isFinite(video.duration) ? video.duration : 0;
+    ready = duration > 0;
+    try { video.currentTime = 0.001; } catch {}
+  };
 
-  let raf = 0;
-  let videoLoaded = false;
+  const tryUnlock = async () => {
+    if (unlocked) return;
+    try {
+      await video.play();
+      video.pause();
+      unlocked = true;
+    } catch {}
+  };
 
-  function clamp01(n: number) {
-    return Math.max(0, Math.min(1, n));
-  }
+  if (video.readyState >= 1) onMeta();
+  else video.addEventListener("loadedmetadata", onMeta, { once: true });
 
-  const A_END = 0.7;
-  const B_START = 0.7;
-  const B_END = 0.85;
-  const C_START = 0.85;
+  void tryUnlock();
 
-  function loadVideoOnce() {
-    if (!videoEl || videoLoaded) return;
-
-    const source = videoEl.querySelector("source");
-    if (source && !videoEl.src) {
-      videoEl.src = source.src;
-      videoEl.load();
-      videoLoaded = true;
-    }
-  }
-
-  function update() {
-    raf = 0;
-
-    if (prefersReducedMotion) {
-      trackEl.style.transform = "none";
-      stickyEl.style.clipPath = "inset(0 0 0 0)";
-      stickyEl.style.filter = "none";
-      stickyEl.style.transform = "scale(1)";
-      videoLayerEl.classList.add("isVisible");
-      videoLayerEl.style.opacity = "1";
-      return;
-    }
-
+  const progress = () => {
     const rect = root.getBoundingClientRect();
-    const total = root.offsetHeight - window.innerHeight;
-    if (total <= 0) return;
+    const scrollable = root.offsetHeight - window.innerHeight;
+    if (scrollable <= 0) return 0;
+    return clamp((-rect.top) / scrollable, 0, 1);
+  };
 
-    const scrolled = clamp01((-rect.top) / total);
-    const maxX = trackEl.scrollWidth - window.innerWidth;
+  const apply = () => {
+    raf = null;
+    if (!ready) return;
 
-    // FASE A
-    const aProgress = clamp01(scrolled / A_END);
-    trackEl.style.transform = `translate3d(${-maxX * aProgress}px, 0, 0)`;
+    const pScroll = progress();
 
-    // FASE B
-    if (scrolled >= B_START && scrolled < C_START) {
-      const bProgress = clamp01((scrolled - B_START) / (B_END - B_START));
-      const mask = 50 - bProgress * 50;
+    // 1) progress del video (0..1) con mapping no lineal
+    const pVideo = clamp(mapProgress(pScroll), 0, 1);
 
-      stickyEl.style.clipPath = `inset(0 ${mask}% 0 ${mask}%)`;
-      stickyEl.style.transform = `scale(${1 + bProgress * 0.04})`;
-      stickyEl.style.filter = `blur(${bProgress * 2}px)`;
+    // 2) recorte de rango (por ejemplo 0.02..0.92)
+    const pr = range.from + (range.to - range.from) * pVideo;
 
-      videoLayerEl.classList.add("isVisible");
-      videoLayerEl.style.opacity = String(bProgress);
+    const target = pr * duration;
+    const safe = clamp(target, 0, Math.max(duration - endPad, 0));
 
-      loadVideoOnce();
-      stickyEl.style.pointerEvents = "";
-    }
+    // 3) smoothing variable
+    const k = typeof smoothing === "function" ? smoothing(pScroll) : smoothing;
+    const kk = clamp(k, 0.01, 0.35); // límites sanos
 
-    // FASE C
-    if (scrolled >= C_START) {
-      trackEl.style.transform = `translate3d(${-maxX}px, 0, 0)`;
-      videoLayerEl.classList.add("isVisible");
-      videoLayerEl.style.opacity = "1";
+    const current = video.currentTime;
+    const next = current + (safe - current) * kk;
 
-      stickyEl.style.clipPath = "inset(0 50% 0 50%)";
-      stickyEl.style.filter = "none";
-      stickyEl.style.transform = "scale(1)";
-      stickyEl.style.pointerEvents = "none";
+    video.currentTime = next;
+  };
 
-      if (videoEl && videoEl.paused) {
-        videoEl.play().catch(() => {});
-      }
-    }
-
-    // RESET
-    if (scrolled < B_START) {
-      stickyEl.style.clipPath = "inset(0 0 0 0)";
-      stickyEl.style.filter = "none";
-      stickyEl.style.transform = "scale(1)";
-      stickyEl.style.pointerEvents = "";
-      videoLayerEl.style.opacity = "0";
-      videoLayerEl.classList.remove("isVisible");
-    }
-  }
-
-  function onScroll() {
-    if (raf) return;
-    raf = requestAnimationFrame(update);
-  }
+  const onScroll = () => {
+    void tryUnlock();
+    if (raf !== null) return;
+    raf = requestAnimationFrame(apply);
+  };
 
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
-  update();
+  apply();
 
   return () => {
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onScroll);
+    if (raf !== null) cancelAnimationFrame(raf);
   };
 }

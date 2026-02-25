@@ -1,24 +1,39 @@
 ---
-import HeroHorizontal from '../components/sections/HeroScroll/HeroHorizontal.astro';
-import ProjectsSection from '../components/sections/ProjectsSection.astro';
+import HeroVertical from "../components/sections/HeroScroll/HeroVertical.astro";
 import IdentitySection from "../components/sections/IdentitySection.astro";
+import SelectedWorks from "../components/sections/SelectedWorks.astro";
+import WorkScatter from "../components/sections/WorkScatter.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Footer from "@/components/Footer.astro";
+import { projects } from "../content/projects";
+import { works, workMotion } from "../domain/works";
 ---
 
-<html lang="en">
-  <head>
-    <title>Jeronimo Nunez | Frontend Architect</title>
-  </head>
+<BaseLayout title="Jeronimo Nunez | Frontend Engineer" lang="es">
+  <main id="inicio">
+    <section id="hero" aria-label="Hero">
+      <HeroVertical />
+    </section>
 
-  <body>
-    <main>
-      <HeroHorizontal />
+    <section id="enfoque" aria-label="Enfoque">
       <IdentitySection />
-      <ProjectsSection />
-    </main>
+    </section>
 
-    <script type="module">
-  import "/src/scripts/scroll/reveal.client.ts";
-</script>
+    <section id="destacados" aria-label="Destacados">
+      <SelectedWorks
+        sectionNo="03"
+        label="Trabajos Destacados"
+        range="24 - 26’"
+        projects={projects}
+      />
+    </section>
 
-  </body>
-</html>
+    <section id="projects" aria-label="Projects">
+      <WorkScatter title="Proyectos" works={works} motion={workMotion} />
+    </section>
+
+    <section id="contact" aria-label="Contact">
+      <Footer />
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,377 @@
+---
+interface Props {
+  brand?: string;
+  location?: string;
+  addressLines?: string[];
+  phone?: string;
+  email?: string;
+  year?: number;
+
+  behanceUrl?: string;
+  linkedinUrl?: string;
+  whatsappUrl?: string;
+}
+
+const {
+  brand = "JERÓNIMO NÚÑEZ",
+  location = "La Plata, Buenos Aires",
+  addressLines = ["La Plata, Buenos Aires", "Argentina"],
+  phone = "+54 9 221 574 1952",
+  email = "contact@vantorastudio.com",
+  year = new Date().getFullYear(),
+
+  behanceUrl = "https://www.behance.net/jeronimo-nunez",
+  linkedinUrl = "https://www.linkedin.com/in/jeronimo-nunez/",
+  whatsappUrl = "https://wa.me/5492215741952?text=Hola%20Jer%C3%B3nimo,%20estuve%20viendo%20tu%20portfolio%20y%20me%20gustar%C3%ADa%20conversar%20sobre%20un%20proyecto."
+} = Astro.props as Props;
+---
+
+<footer class="tc-footer" id="contact" aria-label="Footer">
+
+  <!-- WHITE PANEL -->
+  <div class="tc-panel">
+    <div class="tc-grid">
+
+      <!-- LEFT -->
+      <div class="tc-left">
+        <div class="tc-kicker">Hablemos sobre tu proyecto</div>
+        <h2 class="tc-title">
+          <a href={`mailto:${email}`} aria-label={`Enviar email a ${email}`}>Contacto</a>
+        </h2>
+      </div>
+
+      <!-- MIDDLE -->
+      <nav class="tc-links" aria-label="Navegación de pie de página">
+        <a href="/">Home</a>
+        <a href="#work">Proyectos</a>
+        <a href="#studio">Studio (en proceso...)</a>
+        <a href="#process">Proceso</a>
+        <a href="#contact">Contacto</a>
+      </nav>
+
+      <!-- RIGHT -->
+      <div class="tc-contact-info" aria-label="Información de contacto">
+        <div class="tc-row">
+          <span aria-hidden="true"></span>
+          <div>
+            {addressLines.map((line) => (
+              <>
+                {line}<br />
+              </>
+            ))}
+          </div>
+        </div>
+
+        <div class="tc-row">
+          <span aria-hidden="true"></span>
+          <div>
+            <a href={`tel:${phone.replace(/\s/g, "")}`} aria-label={`Llamar a ${phone}`}>{phone}</a>
+          </div>
+        </div>
+
+        <div class="tc-row">
+          <span aria-hidden="true"></span>
+          <div>
+            <a href={`mailto:${email}`} aria-label={`Enviar email a ${email}`}>{email}</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM LINE -->
+      <div class="tc-bottom">
+        <div class="tc-news">
+          <span class="tc-news__label">Recibí updates</span>
+
+          <form class="tc-input" action="#" method="post" aria-label="Suscripción al newsletter">
+            <input type="email" name="email" placeholder="Ingresá tu email" autocomplete="email" />
+            <button class="tc-input__btn" type="submit" aria-label="Enviar">
+              ↳
+            </button>
+          </form>
+        </div>
+
+        <a class="tc-back" href="#top">Volver arriba</a>
+
+        <div class="tc-social" aria-label="Redes sociales">
+          <a href={linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a>,
+          <a href={behanceUrl} target="_blank" rel="noreferrer">Behance</a>,{" "}
+          <a href={whatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLACK STRIP -->
+  <div class="tc-strip" aria-label="Legal">
+    <div class="tc-strip-inner">
+
+      <div class="tc-wordmark" aria-hidden="true">
+        {brand}
+      </div>
+
+      <div class="tc-legal">
+        <div>© {year} {brand}. Todos los derechos reservados.</div>
+
+        <div class="tc-legal-mid">
+          <a href="/privacy">Política de Privacidad</a>
+          <a href="/terms">Términos de servicio</a>
+        </div>
+
+        <div class="tc-legal-right">
+          <span>Founder of Vántora Creative Studio.</span>
+          <a href="https://vantorastudio.com" class="tc-vantora-link" target="_blank" rel="noreferrer">
+            Explore Vantora →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</footer>
+
+<style>
+.tc-footer {
+  --pad: clamp(20px, 3vw, 48px);
+  --ink: #0b0b0c;
+  --muted: rgba(11,11,12,.18);
+  --hairline: rgba(11,11,12,.15);
+
+  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+.tc-footer a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tc-footer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+/* PANEL */
+.tc-panel {
+  padding: 60px var(--pad) 30px;
+}
+
+.tc-grid {
+  display: grid;
+  grid-template-columns: 1.3fr .7fr 1fr;
+  gap: clamp(24px, 4vw, 80px);
+}
+
+.tc-kicker {
+  font-size: clamp(24px, 3vw, 48px);
+  color: var(--muted);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.tc-title {
+  font-size: clamp(34px, 4vw, 60px);
+  margin-top: 8px;
+}
+
+.tc-title a {
+  text-decoration: underline;
+  text-underline-offset: 10px;
+}
+
+.tc-links {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.tc-contact-info {
+  display: grid;
+  gap: 14px;
+  font-size: 14px;
+}
+
+.tc-row {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 14px;
+}
+
+.tc-bottom {
+  grid-column: 1 / -1;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-size: 14px;
+  gap: 14px;
+}
+
+.tc-news {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tc-news__label {
+  white-space: nowrap;
+}
+
+.tc-input {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(0,0,0,.3);
+  padding-bottom: 6px;
+  gap: 12px;
+  width: min(420px, 44vw);
+}
+
+.tc-input input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  flex: 1;
+  min-width: 160px;
+}
+
+.tc-input__btn {
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.tc-back {
+  opacity: .45;
+  font-weight: 600;
+  justify-self: center;
+}
+
+.tc-social {
+  justify-self: end;
+}
+
+/* BLACK STRIP */
+.tc-strip {
+  background: #000;
+  color: #fff;
+  overflow: hidden;
+}
+
+.tc-strip-inner {
+  padding: 30px var(--pad);
+}
+
+.tc-wordmark {
+  font-size: clamp(64px, 18vw, 186px);
+  font-weight: 800;
+  line-height: .85;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+.tc-legal{
+  margin-top: 20px;
+  font-size: 14px;
+  opacity: .6;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: baseline;          
+  column-gap: 18px;
+  row-gap: 10px;
+}
+
+.tc-legal-right{
+  justify-self: end;
+  display: inline-flex;               
+  align-items: baseline;           
+  gap: 6px;
+  flex-wrap: wrap;
+
+  line-height: 1.2;                  
+  white-space: nowrap;               
+}
+
+.tc-legal-right a,
+.tc-legal-right span{
+  line-height: inherit;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.tc-footer .tc-vantora-link {
+  font-weight: 800;
+  color: tomato;
+}
+
+.tc-footer .tc-vantora-link:hover {
+  color: #ff1c0c; 
+}
+
+.tc-legal-mid{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 26px;
+  justify-content: center;
+  line-height: 1.2;
+}
+
+/* RESPONSIVE */
+@media (max-width: 980px) {
+  .tc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tc-bottom {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .tc-back,
+  .tc-social {
+    justify-self: start;
+  }
+
+  .tc-input {
+    width: min(520px, 100%);
+  }
+
+  .tc-legal{
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .tc-legal-right{
+    justify-self: start;
+    white-space: normal;     
+  }
+
+  .tc-legal-mid{
+    justify-content: flex-start;
+  }
+
+  .tc-wordmark {
+    font-size: clamp(56px, 16vw, 120px);
+  }
+}
+
+@media (max-width: 520px) {
+  .tc-panel { padding: 44px var(--pad) 24px; }
+
+  .tc-title { font-size: clamp(30px, 9vw, 46px); }
+
+  .tc-kicker { font-size: clamp(18px, 7vw, 34px); }
+
+  .tc-row { grid-template-columns: 16px 1fr; gap: 10px; }
+
+  .tc-wordmark { letter-spacing: -0.03em; }
+}
+</style>

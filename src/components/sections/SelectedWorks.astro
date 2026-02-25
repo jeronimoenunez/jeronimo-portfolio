@@ -1,0 +1,80 @@
+---
+import type { Project } from "../../content/projects";
+import ProjectSlide from "../ui/ProjectSlide.astro";
+
+const {
+  sectionNo = "03",
+  label = "SELECTED WORKS",
+  range = "17 - 25’",
+  projects = [],
+} = Astro.props as {
+  sectionNo?: string;
+  label?: string;
+  range?: string;
+  projects: Project[];
+};
+---
+
+<section class="sw" data-sw>
+  <header class="swHeader" data-sw-header>
+    <div class="swHeader__row">
+      <div class="swHeader__left">{label}</div>
+      <div class="swHeader__mid">{sectionNo}</div>
+      <div class="swHeader__right">{range}</div>
+    </div>
+  </header>
+
+  <div class="swSlides" data-sw-slides>
+    {projects.map((project) => (
+      <ProjectSlide project={project} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .sw {
+    position: relative;
+    background: var(--page-bg, #fff);
+    color: var(--text, #0b0b0c);
+  }
+
+  /* Header sticky como Telha */
+  .swHeader {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--page-bg, #fff);
+  }
+
+  .swHeader__row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 18px clamp(16px, 3vw, 32px);
+    border-bottom: 1px solid rgba(11,11,12,.10);
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .swHeader__left { 
+    justify-self: start; 
+    font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  .swHeader__mid  { 
+    justify-self: center; opacity: .45; 
+    font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  .swHeader__right{ 
+    justify-self: end; 
+    font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* Contenedor de slides */
+  .swSlides {
+    position: relative;
+  }
+</style>
+
+<!-- Interacción aislada -->
+<script src="/scripts/selectedWorks.client.js" defer></script>

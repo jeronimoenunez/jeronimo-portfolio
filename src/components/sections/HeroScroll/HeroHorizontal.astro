@@ -1,35 +1,44 @@
+---
+import heroClientUrl from "./heroHorizontal.client.ts?url";
+const VIDEO_URL = "https://assets.jeronimonunez.com/video/backgroundHero.mp4";
+const NOISE_URL = "https://assets.jeronimonunez.com/img/noise.png";
+---
+
 <section data-hero class="hero" aria-label="Hero">
   <div data-type-layer class="sticky">
     <div data-track class="track">
-
-      <!-- PANEL 1: INTRO -->
+      <!-- PANEL 1 -->
       <section class="panel" data-word="INTRO" aria-label="Intro">
         <div class="container">
-          <p class="eyebrow">Frontend Architecture · Product UX · Security-by-Design</p>
-
-          <h1 class="title">Construyo interfaces como sistemas de confianza.</h1>
-
+          <!-- <p class="eyebrow">Frontend Architecture · Security-by-Design · Fintech Systems</p> -->
+          <!-- <h1 class="title">Diseño y construyo sistemas digitales de alta confianza.</h1> -->
+           <p class="eyebrow">UX/UI | Arquitectura Frontend | Security-by-Design </p> 
+           <h1 class="title"> Sistemas frontend <br>listos para produccion.</h1>
           <p class="subtitle">
-            Diseño UX/UI + desarrollo end-to-end para fintech y productos regulados:
-            contratos tipados, autenticación robusta, performance budgets y threat modeling
-            para reducir riesgo y escalar con equipos grandes.
+            Arquitectura modular, estado predecible e integracion robusta con backend.
+            <!-- Arquitectura frontend, contratos tipados y security-by-design para fintech y productos regulados. -->
           </p>
 
           <div class="actions">
-            <a class="btn btn--primary" href="#proyecto-secure-banking">Ver Secure Digital Banking</a>
+            <a class="btn btn--primary" href="#proyecto-secure-banking">Ver Proyectos</a>
             <a class="btn btn--ghost" href="#contacto">Contactar</a>
           </div>
 
           <div class="chips" aria-label="Highlights">
-            <span class="chip">Typed contracts (Zod/OpenAPI)</span>
+            <!-- <span class="chip">Typed contracts (Zod/OpenAPI)</span>
             <span class="chip">Auth & session hardening</span>
             <span class="chip">OWASP + STRIDE modeling</span>
-            <span class="chip">CI/CD + observability</span>
+            <span class="chip">CI/CD + observability</span> -->
+            <span class="chip">Astro</span>
+            <span class="chip">React</span>
+            <span class="chip">TypeScript</span>
+            <span class="chip">REST APIs</span>
+            <span class="chip">Component Architecture</span>
           </div>
         </div>
       </section>
 
-      <!-- PANEL 2: ARCHITECT -->
+      <!-- PANEL 2 -->
       <section class="panel" data-word="ARCHITECT" aria-label="Arquitectura">
         <div class="container twoCol">
           <div>
@@ -50,7 +59,7 @@
         </div>
       </section>
 
-      <!-- PANEL 3: PROJECTS -->
+      <!-- PANEL 3 -->
       <section class="panel" data-word="PROJECTS" aria-label="Seguridad y producto">
         <div class="container twoCol">
           <div>
@@ -71,7 +80,7 @@
         </div>
       </section>
 
-      <!-- PANEL 4: VISION -->
+      <!-- PANEL 4 -->
       <section class="panel" data-word="VISION" aria-label="Gobernanza">
         <div class="container twoCol">
           <div>
@@ -91,37 +100,33 @@
           </ul>
         </div>
       </section>
-
     </div>
   </div>
 
-  <!-- Video layer siempre de fondo -->
+  <!-- VIDEO layer -->
   <div data-video-layer class="video-layer" aria-hidden="true">
     <video
       data-video
       class="bgVideo"
       muted
       playsinline
+      webkit-playsinline
       preload="metadata"
-      poster="/video/hero-poster.webp"
-      autoplay
-      loop
+      crossorigin="anonymous"
     >
-      <source src="/video/hero.mp4" type="video/mp4" />
+      <source src={VIDEO_URL} type="video/mp4" />
     </video>
-
-    <div class="bgOverlay"></div>
-    <div class="bgNoise"></div>
+    <!-- <div class="bgOverlay"></div> -->
+    <!-- <div class="bgNoise" style={`background-image:url(${NOISE_URL})`}></div> -->
   </div>
 </section>
 
-<script src="./heroHorizontal.client.ts"></script>
+<script type="module" src={heroClientUrl}></script>
 
 <style>
-  /* Base */
   .hero {
     position: relative;
-    height: 400vh; /* espacio para scrollear */
+    height: 400vh;
     overflow: clip;
     color: #fff;
   }
@@ -131,7 +136,7 @@
     top: 0;
     height: 100vh;
     overflow: hidden;
-    z-index: 2; /* arriba del video */
+    z-index: 2;
   }
 
   .track {
@@ -142,11 +147,12 @@
     transform: translate3d(0,0,0);
   }
 
-  /* Video layer (fondo) */
+  /* Fondo video full screen */
   .video-layer {
-    position: absolute;
+    position: fixed; /* <- clave: siempre cubre viewport */
     inset: 0;
     z-index: 1;
+    pointer-events: none;
   }
 
   .bgVideo {
@@ -154,11 +160,13 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    filter: saturate(0.9) contrast(1.05);
+    object-fit: cover; 
+    transform: translateZ(0);
+    will-change: contents;
   }
 
   .bgOverlay {
+    display: none;
     position: absolute;
     inset: 0;
     background:
@@ -167,21 +175,21 @@
   }
 
   .bgNoise {
+    display: none;
     position: absolute;
     inset: 0;
     opacity: 0.06;
-    background-image: url("/noise.png");
+    background-image: url("https://assets.jeronimonunez.com/img/noise.png");
     background-size: 320px 320px;
     mix-blend-mode: overlay;
   }
 
-  /* Panels */
   .panel {
     width: 100vw;
     height: 100vh;
     display: grid;
     align-items: center;
-    background: transparent; /* clave: deja ver el video */
+    background: transparent;
   }
 
   .container {
@@ -196,7 +204,6 @@
   }
   .twoCol > * { flex: 1; }
 
-  /* Typo */
   .eyebrow {
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -250,7 +257,6 @@
     line-height: 1.9;
   }
 
-  /* CTAs */
   .actions {
     display: flex;
     gap: 0.75rem;
@@ -297,13 +303,12 @@
     border: 1px solid rgba(255,255,255,0.14);
   }
 
-  /* Responsive */
   @media (max-width: 820px) {
     .twoCol { flex-direction: column; }
     .panelList { margin-top: 1rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bgVideo { display: none; }
+    .video-layer { display: none; }
   }
 </style>

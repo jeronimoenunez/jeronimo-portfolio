@@ -1,17 +1,55 @@
 ---
+// IdentitySection.astro
 import "../../styles/sections/identity.css";
 ---
 
-<section class="identity" data-identity>
-  <div class="identity-inner">
-    <p class="identity-line" data-word data-reveal data-stagger="0">Frontend Architect</p>
-    <p class="identity-line" data-word data-reveal data-stagger="1">UX-first mindset</p>
-    <p class="identity-line" data-word data-reveal data-stagger="2">Blockchain & Cybersecurity</p>
-    <p class="identity-line" data-word data-reveal data-stagger="3">I design systems, not screens</p>
+<section class="telha-about" id="about">
+  <div class="telha-wrap">
+    
+    <div class="telha-content">
+      <div class="telha-figure-container">
+       <div class="telha-figure" aria-hidden="true">
+          <img 
+            src="https://i.pinimg.com/736x/f2/b2/fc/f2b2fc59b1a4f20cb42b048511f08e8e.jpg" 
+            alt="" 
+            loading="lazy" 
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      <div class="telha-note">
+        <p>
+          Estructura orientada a dominio, estado predecible y contratos claros entre frontend y backend.
+          Pensado para escalar en equipo.
+        </p>
+      </div>
+
+      <h2 class="telha-headline">
+        <span class="telha-offset">Diseño frontend</span>
+        como un sistema, no como un conjunto de pantallas.
+      </h2>
+    </div>
+
+    <div class="telha-bottom">
+      <div class="telha-bottom-col">
+        <p class="telha-miniTitle">Arquitectura de frontend</p>
+        <p class="telha-miniSub">Diseño estructural <br>& resiliencia</p>
+      </div>
+      <div class="telha-bottom-col">
+        <p class="telha-rightTitle">Arquitectura orientada a dominio</p>
+        <p class="telha-rightPara">Organizo el frontend por capacidades del negocio, no por capas técnicas.
+        Cada dominio encapsula estado, reglas y contratos.
+        El resultado es un sistema predecible, escalable y mantenible en el tiempo.
+        </p>
+      </div>
+      <div class="telha-bottom-col">
+        <p class="telha-rightTitle">Contratos y seguridad</p>
+        <p class="telha-rightPara">Defino contratos explícitos entre cliente y servidor:
+        qué se envía, qué se recibe y cómo se manejan errores.
+        La seguridad no es un parche posterior — es parte del diseño del sistema.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
-
-<script type="module">
-  import "/src/scripts/scroll/identityReveal.client.ts";
-</script>
-

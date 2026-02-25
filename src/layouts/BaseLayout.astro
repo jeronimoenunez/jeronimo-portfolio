@@ -1,0 +1,30 @@
+---
+import SiteHeader from "@/components/SiteHeader.astro";
+const { title = "Jeronimo Nunez | Frontend Architect", lang = "es" } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+
+  <body id="top">
+    <SiteHeader
+    brand="JERÓNIMO NÚÑEZ"
+      location="La Plata, AR"
+      leftNav={[
+        { label: "Home", href: "#hero" },
+        { label: "Enfoque", href: "#enfoque" },
+        { label: "Destacados", href: "#destacados" },
+        { label: "Proyectos", href: "#projects" },
+      ]}
+      rightNav={[{ label: "Contacto", href: "#contact" }]}
+      sticky={true}
+    />
+
+    <slot />
+  </body>
+</html>
