@@ -60,9 +60,11 @@ const { title = "Trabajos", count, works, motion } = Astro.props as {
         data-work-motion
         set:html={JSON.stringify(motion)}
       ></script>
-
     </div>
   </div>
+
+  <!-- ✅ bundleado por Astro/Vite -->
+  <script type="module" src={workScatterUrl}></script>
 </section>
 
 <section class="workStory" data-work-story>
@@ -99,6 +101,7 @@ const { title = "Trabajos", count, works, motion } = Astro.props as {
     </div>
   </div>
 
+  <!-- ✅ bundleado por Astro/Vite -->
   <script type="module" src={workStoryUrl}></script>
 </section>
 
@@ -465,5 +468,3 @@ const { title = "Trabajos", count, works, motion } = Astro.props as {
   }
 }
 </style>
-
-<script type="module" src={workScatterUrl}></script>

@@ -2,6 +2,9 @@
 import type { Project } from "../../content/projects";
 import ProjectSlide from "../ui/ProjectSlide.astro";
 
+// ✅ bundle correcto en Cloudflare
+import selectedWorksUrl from "../../scripts/scroll/selectedWorks.client.ts?url";
+
 const {
   sectionNo = "03",
   label = "SELECTED WORKS",
@@ -29,6 +32,9 @@ const {
       <ProjectSlide project={project} />
     ))}
   </div>
+
+  <!-- ✅ Astro/Vite genera /assets/...js -->
+  <script type="module" src={selectedWorksUrl}></script>
 </section>
 
 <style>
@@ -38,7 +44,6 @@ const {
     color: var(--text, #0b0b0c);
   }
 
-  /* Header sticky como Telha */
   .swHeader {
     position: sticky;
     top: 0;
@@ -51,30 +56,21 @@ const {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 18px clamp(16px, 3vw, 32px);
-    border-bottom: 1px solid rgba(11,11,12,.10);
+    border-bottom: 1px solid rgba(11, 11, 12, 0.10);
     font-size: 12px;
-    letter-spacing: .08em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
-  .swHeader__left { 
-    justify-self: start; 
-    font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-  }
-  .swHeader__mid  { 
-    justify-self: center; opacity: .45; 
-    font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-  }
-  .swHeader__right{ 
-    justify-self: end; 
+  .swHeader__left,
+  .swHeader__mid,
+  .swHeader__right {
     font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   }
 
-  /* Contenedor de slides */
-  .swSlides {
-    position: relative;
-  }
+  .swHeader__left { justify-self: start; }
+  .swHeader__mid  { justify-self: center; opacity: 0.45; }
+  .swHeader__right{ justify-self: end; }
+
+  .swSlides { position: relative; }
 </style>
-
-<!-- Interacción aislada -->
-<script src="/scripts/selectedWorks.client.js" defer></script>

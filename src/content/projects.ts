@@ -1,8 +1,8 @@
 export type Project = {
   slug: string;
   title: string;
-  category: string;  // "Residential", "Multi-residential", etc.
-  year: string;      // "2025"
+  category: string;  
+  year: string;   
   image: {
     src: string;
     alt: string;

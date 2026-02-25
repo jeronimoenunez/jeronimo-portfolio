@@ -1,3 +1,4 @@
+// src/scripts/workStory.client.ts
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -6,65 +7,58 @@ function initOne(root: HTMLElement) {
   root.dataset.workStoryInit = "1";
 
   const steps = Array.from(root.querySelectorAll<HTMLElement>("[data-step]"));
-  const scrollEl = root.querySelector(".workStory__scroll") as HTMLElement | null;
-    if (!scrollEl) return;
-
-    const scroll = scrollEl;
+  const scroll = root.querySelector<HTMLElement>(".workStory__scroll");
+  if (!scroll || steps.length === 0) return;
 
   let ticking = false;
 
-    function computeProgress(): number {
+  function computeProgress(): number {
     const r = scroll.getBoundingClientRect();
     const vh = window.innerHeight || 1;
     const total = r.height - vh;
     const p = total <= 1 ? 1 : -r.top / total;
     return clamp01(p);
-    }
+  }
 
   function render() {
-  ticking = false;
+    ticking = false;
 
-  const p = computeProgress();
-  const n = steps.length;
-  if (n === 0) return;
+    const p = computeProgress();
+    const n = steps.length;
+    if (n === 0) return;
 
-  const x = p * n;
-  const iActive = Math.min(n - 1, Math.floor(x));
-  const localT = clamp01(x - iActive);
+    const x = p * n;
+    const iActive = Math.min(n - 1, Math.floor(x));
+    const localT = clamp01(x - iActive);
 
-  // 1) Reseteo total (para que no se pisen y no queden visibles)
-  steps.forEach((step) => step.classList.remove("isActive", "isPast"));
+    // reset
+    steps.forEach((s) => s.classList.remove("isActive", "isPast"));
 
-  // 2) Activo SOLO el actual
-  const active = steps[iActive];
-  if (active) active.classList.add("isActive");
+    const active = steps[iActive];
+    if (active) active.classList.add("isActive");
 
-  // (opcional) si quiero un “ghost” del anterior:
-  // if (iActive > 0) steps[iActive - 1]?.classList.add("isPast");
+    // color intensity
+    steps.forEach((step, i) => {
+      const title = step.querySelector<HTMLElement>(".workStep__title");
+      const body = step.querySelector<HTMLElement>(".workStep__body");
+      if (!title || !body) return;
 
-  // 3) Intensidad “se ilumina mientras se lee”
-  steps.forEach((step, i) => {
-    const title = step.querySelector<HTMLElement>(".workStep__title");
-    const body = step.querySelector<HTMLElement>(".workStep__body");
-    if (!title || !body) return;
+      let intensity = 0;
+      if (i === iActive) intensity = localT;
+      else if (i < iActive) intensity = 1;
 
-    let intensity = 0;
-    if (i === iActive) intensity = localT;
-    else if (i < iActive) intensity = 1;
+      const titleAlpha = lerp(0.18, 0.95, intensity);
+      const bodyAlpha = lerp(0.28, 0.78, intensity);
 
-    const titleAlpha = lerp(0.18, 0.95, intensity);
-    const bodyAlpha = lerp(0.28, 0.78, intensity);
-
-    title.style.color = `rgba(255,255,255,${titleAlpha})`;
-    body.style.color = `rgba(255,255,255,${bodyAlpha})`;
-  });
-}
+      title.style.color = `rgba(255,255,255,${titleAlpha})`;
+      body.style.color = `rgba(255,255,255,${bodyAlpha})`;
+    });
+  }
 
   function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(render);
-    }
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(render);
   }
 
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -72,11 +66,12 @@ function initOne(root: HTMLElement) {
   onScroll();
 }
 
-export function initWorkStory() {
+function initWorkStory() {
   document.querySelectorAll<HTMLElement>("[data-work-story]").forEach(initOne);
 }
 
-// aseguro que corre después de que existe el DOM
-if (typeof window !== "undefined") {
-  window.addEventListener("DOMContentLoaded", initWorkStory, { once: true });
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initWorkStory, { once: true });
+} else {
+  initWorkStory();
 }

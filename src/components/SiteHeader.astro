@@ -1,6 +1,8 @@
 ---
 type NavItem = { label: string; href: string };
 
+import headerClientUrl from "../scripts/header.client.ts?url";
+
 const {
   brand = "JERÓNIMO NÚÑEZ",
   leftNav = [
@@ -62,21 +64,17 @@ const {
       </ul>
     </nav>
 
-    <!-- Mobile toggle -->
     <button class="vh__toggle" type="button" aria-label="Open menu" data-vh-toggle>
       <span class="vh__toggleBars" aria-hidden="true"></span>
     </button>
   </div>
 
-  <!-- Mobile panel -->
   <div class="vh__panel" data-vh-panel hidden>
     <div class="vh__panelInner">
       <div class="vh__panelMeta">
         <div class="vh__panelLine">
           <span class="vh__panelLabel">Time</span>
-          <time class="vh__panelValue" data-vh-time-m>
-            {time}
-          </time>
+          <time class="vh__panelValue" data-vh-time-m>{time}</time>
         </div>
         <div class="vh__panelLine">
           <span class="vh__panelLabel">Location</span>
@@ -99,14 +97,12 @@ const {
   </div>
 
   <style>
+    /* (tu CSS tal cual, no lo toco) */
     :global(:root){
       --vh-font: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-
-      /* Tokens */
       --vh-h: 56px;
       --vh-pad-x: 16px;
       --vh-radius: 14px;
-
       --vh-bg: rgba(10,10,10,.22);
       --vh-border: rgba(255,255,255,.14);
       --vh-text: rgba(0, 0, 0, 0.92);
@@ -114,36 +110,25 @@ const {
       --vh-hover: rgba(255,255,255,.10);
       --vh-shadow: 0 10px 30px rgba(0,0,0,.18);
     }
-
-    .vh{
-      font-family: var(--vh-font);
-      width: 100%;
-      z-index: 50;
-      pointer-events: none; 
-    }
-    .vh--sticky{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    }
+    .vh{ font-family: var(--vh-font); width: 100%; z-index: 50; pointer-events: none; }
+    .vh--sticky{ position: fixed; top: 0; left: 0; right: 0; }
 
     .vh__inner{
-        pointer-events: auto;
-        width: calc(100% - 24px);
-        max-width: 1680px;
-        margin: 0px auto 0;
-        height: var(--vh-h);
-        padding: 0 16px;
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items: center;
-        gap: 12px;
-        border-radius: 0px;
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.07);
-        -webkit-backdrop-filter: blur(14px);
-        backdrop-filter: blur(24px);
+      pointer-events: auto;
+      width: calc(100% - 24px);
+      max-width: 1680px;
+      margin: 0px auto 0;
+      height: var(--vh-h);
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      border-radius: 0px;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(24px);
     }
 
     .vh__brand{
@@ -161,14 +146,14 @@ const {
     .vh__nav--right{ display: none; }
 
     .vh__list{
-        color: var(--vh-text);
-        list-style: none;
-        display: flex;
-        gap: 14px;
-        margin: 0;
-        padding: 0;
-        align-items: center;
-        justify-content: center;
+      color: var(--vh-text);
+      list-style: none;
+      display: flex;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+      justify-content: center;
     }
 
     .vh__link{
@@ -187,35 +172,31 @@ const {
       border: 1px solid steelblue;
     }
     .vh__link--cta{
-        color: #fff;
-        border: 1px solid rgba(255,255,255,.18);
-        background: steelblue;
-        font-weight: 700;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.18);
+      background: steelblue;
+      font-weight: 700;
     }
 
-    /* Active state (desktop) */
     .vh__link.is-active{
-    color: rgb(0, 0, 0);
-    /* background: rgba(0,0,0,.06); */
-    position: relative;
-    font-weight: bold;
+      color: rgb(0, 0, 0);
+      position: relative;
+      font-weight: bold;
     }
-
     .vh__link.is-active::after{
-    content: "";
-    position: absolute;
-    left: 12px;
-    right: 12px;
-    bottom: 6px;
-    height: 1px;
-    background: rgba(0,0,0,.55);
-    border-radius: 999px;
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 6px;
+      height: 1px;
+      background: rgba(0,0,0,.55);
+      border-radius: 999px;
     }
 
-    /* Active state (mobile panel) */
     .vh__panelLink.is-active{
-    border-color: rgba(255,255,255,.22);
-    background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.10);
     }
 
     .vh__meta{
@@ -228,12 +209,8 @@ const {
       letter-spacing: .02em;
       white-space: nowrap;
     }
-    .vh__time{ 
-        color: var(--vh-text);
-    }
-    .vh__dot{ 
-        opacity: .55; 
-    }
+    .vh__time{ color: var(--vh-text); }
+    .vh__dot{ opacity: .55; }
 
     .vh__toggle{
       justify-self: end;
@@ -246,12 +223,7 @@ const {
       display: grid;
       place-items: center;
     }
-    .vh__toggleBars{
-      width: 16px;
-      height: 10px;
-      position: relative;
-      display: block;
-    }
+    .vh__toggleBars{ width: 16px; height: 10px; position: relative; display: block; }
     .vh__toggleBars::before,
     .vh__toggleBars::after{
       content: "";
@@ -265,7 +237,6 @@ const {
     .vh__toggleBars::before{ top: 0; }
     .vh__toggleBars::after{ bottom: 0; }
 
-    /* Panel mobile */
     .vh__panel{
       pointer-events: auto;
       margin: 10px auto 0;
@@ -275,45 +246,15 @@ const {
       border: 1px solid var(--vh-border);
       box-shadow: var(--vh-shadow);
       overflow: hidden;
-
       -webkit-backdrop-filter: blur(16px);
       backdrop-filter: blur(16px);
     }
-    .vh__panelInner{
-      padding: 14px 16px 16px;
-      display: grid;
-      gap: 14px;
-    }
-    .vh__panelMeta{
-      display: grid;
-      gap: 8px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .vh__panelLine{
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12px;
-    }
-    .vh__panelLabel{
-      color: var(--vh-muted);
-      font-size: 12px;
-      letter-spacing: .02em;
-    }
-    .vh__panelValue{
-      color: var(--vh-text);
-      font-size: 12px;
-      letter-spacing: .02em;
-      white-space: nowrap;
-    }
-    .vh__panelList{
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 6px;
-    }
+    .vh__panelInner{ padding: 14px 16px 16px; display: grid; gap: 14px; }
+    .vh__panelMeta{ display: grid; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.10); }
+    .vh__panelLine{ display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .vh__panelLabel{ color: var(--vh-muted); font-size: 12px; letter-spacing: .02em; }
+    .vh__panelValue{ color: var(--vh-text); font-size: 12px; letter-spacing: .02em; white-space: nowrap; }
+    .vh__panelList{ list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
     .vh__panelLink{
       display: flex;
       justify-content: space-between;
@@ -327,144 +268,23 @@ const {
       font-size: 14px;
       letter-spacing: .01em;
     }
-    .vh__panelLink:hover{
-      background: rgba(255,255,255,.08);
-    }
+    .vh__panelLink:hover{ background: rgba(255,255,255,.08); }
 
-    /* Desktop */
     @media (min-width: 860px){
-      .vh{
-        pointer-events: none;
-      }
+      .vh{ pointer-events: none; }
       .vh__nav{ display: block; }
       .vh__nav--right{ display: block; justify-self: end; }
       .vh__toggle{ display: none; }
       .vh__meta{ display: inline-flex; }
-      .vh__inner{
-        grid-template-columns: auto 1fr auto auto;
-      }
+      .vh__inner{ grid-template-columns: auto 1fr auto auto; }
       .vh__panel{ display: none; }
     }
 
-    /* reduce motion */
     @media (prefers-reduced-motion: reduce){
       .vh__link{ transition: none; }
     }
   </style>
 
-<script is:inline>
-  (function(){
-    const root = document.querySelector("[data-site-header]");
-    if(!root) return;
-
-    const toggle = root.querySelector("[data-vh-toggle]");
-    const panel  = root.querySelector("[data-vh-panel]");
-
-    // Mobile menu
-    if (toggle && panel) {
-      const close = () => { panel.hidden = true; toggle.setAttribute("aria-label","Open menu"); };
-      const open  = () => { panel.hidden = false; toggle.setAttribute("aria-label","Close menu"); };
-
-      toggle.addEventListener("click", () => {
-        const isHidden = panel.hidden;
-        if (isHidden) open(); else close();
-      });
-
-      panel.addEventListener("click", (e) => {
-        const a = e.target && e.target.closest && e.target.closest("[data-vh-close]");
-        if (a) close();
-      });
-
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") close();
-      });
-    }
-
-    // Optional clock (local browser time)
-    const t1 = root.querySelector("[data-vh-time]");
-    const t2 = root.querySelector("[data-vh-time-m]");
-    if (t1 || t2) {
-      const fmt = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit" });
-      function tick(){
-        const now = new Date();
-        const val = fmt.format(now);
-        if (t1) { t1.textContent = val; t1.setAttribute("datetime", now.toISOString()); }
-        if (t2) { t2.textContent = val; }
-      }
-      tick();
-      setInterval(tick, 30_000);
-    }
-
-    // ===== Active link (scroll spy) =====
-    const desktopLinks = Array.from(root.querySelectorAll('a.vh__link[href^="#"]'));
-    const mobileLinks  = Array.from(root.querySelectorAll('a.vh__panelLink[href^="#"]'));
-
-    const allLinks = [...desktopLinks, ...mobileLinks];
-    const byHash = new Map();
-    allLinks.forEach(a => {
-      const hash = a.getAttribute("href");
-      if (!hash) return;
-      if (!byHash.has(hash)) byHash.set(hash, []);
-      byHash.get(hash).push(a);
-    });
-
-    const hashes = Array.from(byHash.keys());
-    const sections = hashes
-      .map(h => document.querySelector(h))
-      .filter(Boolean);
-
-    function setActive(hash){
-      allLinks.forEach(a => a.classList.remove("is-active"));
-      const group = byHash.get(hash);
-      if (group) group.forEach(a => a.classList.add("is-active"));
-    }
-
-    // Click: activa instantáneo
-    allLinks.forEach(a => {
-      a.addEventListener("click", () => {
-        const hash = a.getAttribute("href");
-        if (hash) setActive(hash);
-      });
-    });
-
-    // Si hay hash en URL al cargar
-    if (location.hash && byHash.has(location.hash)) {
-      setActive(location.hash);
-    } else if (hashes.length) {
-      // default: primer link
-      setActive(hashes[0]);
-    }
-
-    // Observer: activa según sección visible
-    if (sections.length && "IntersectionObserver" in window) {
-      let current = location.hash && byHash.has(location.hash) ? location.hash : hashes[0];
-
-      const io = new IntersectionObserver((entries) => {
-        // Elegimos la sección con mayor intersección
-        let best = null;
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
-        }
-        if (!best) return;
-
-        const id = best.target.id;
-        if (!id) return;
-
-        const next = "#" + id;
-        if (next !== current && byHash.has(next)) {
-          current = next;
-          setActive(next);
-        }
-      }, {
-        // Telha feel: activa cuando la sección entra “bien” en viewport
-        root: null,
-        rootMargin: "-20% 0px -65% 0px",
-        threshold: [0.08, 0.15, 0.25, 0.35, 0.5, 0.65]
-      });
-
-      sections.forEach(sec => io.observe(sec));
-    }
-  })();
-</script>
+  <!-- ✅ script bundleado (no inline) -->
+  <script type="module" src={headerClientUrl}></script>
 </header>
