@@ -1,7 +1,5 @@
 ---
 import type { Work, WorkMotion } from "../../domain/works";
-import workScatterUrl from "../../scripts/workScatter.client.ts?url";
-import workStoryUrl from "../../scripts/workStory.client.ts?url";
 
 const { title = "Trabajos", count, works, motion } = Astro.props as {
   title?: string;
@@ -62,9 +60,6 @@ const { title = "Trabajos", count, works, motion } = Astro.props as {
       ></script>
     </div>
   </div>
-
-  <!-- ✅ bundleado por Astro/Vite -->
-  <script type="module" src={workScatterUrl}></script>
 </section>
 
 <section class="workStory" data-work-story>
@@ -100,371 +95,77 @@ const { title = "Trabajos", count, works, motion } = Astro.props as {
       </div>
     </div>
   </div>
-
-  <!-- ✅ bundleado por Astro/Vite -->
-  <script type="module" src={workStoryUrl}></script>
 </section>
 
+<script>
+  import "../../scripts/workScatter.client.ts";
+  import "../../scripts/workStory.client.ts";
+</script>
+
 <style>
-.workScatter{
-  position: relative;
-  background: var(--page-bg, #fff);
-  color: var(--text, #0b0b0c);
-}
-
-.workScatter__scroll{
-  height: 360vh; 
-}
-
-.workScatter__sticky{
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.workScatter__header{
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 20;
-}
-
-.workScatter__black{
-  position: absolute;
-  inset: 0;
-  background: #000;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 12; 
-  transition: opacity 0.0s; 
-}
-
-.workScatter__title{
-  position: absolute;
-  left: 50%;
-  top: 52%;
-  transform: translate(-50%, -50%);
-  font-size: clamp(52px, 7vw, 108px);
-  letter-spacing: -0.04em;
-  line-height: 0.95;
-  margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-}
-
-.workScatter__count{
-  font-size: 0.35em;
-  vertical-align: super;
-  margin-left: 0.15em;
-  opacity: 0.7;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-}
-
-.workScatter__cta{
-  position: absolute;
-  left: 50%;
-  bottom: 40px;
-  transform: translateX(-50%);
-  z-index: 21;
-  pointer-events: auto;
-}
-
-.workScatter__pill{
-  display: inline-flex;
-  gap: 14px;
-  align-items: center;
-  border: 0;
-  border-radius: 999px;
-  padding: 10px 14px;
-  background: rgba(0,0,0,0.86);
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
-}
-
+/* ... (Mantenemos tu CSS original que ya funciona perfecto) ... */
+.workScatter{ position: relative; background: var(--page-bg, #fff); color: var(--text, #0b0b0c); }
+.workScatter__scroll{ height: 360vh; }
+.workScatter__sticky{ position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.workScatter__header{ position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+.workScatter__black{ position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 12; transition: opacity 0.0s; }
+.workScatter__title{ position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); font-size: clamp(52px, 7vw, 108px); letter-spacing: -0.04em; line-height: 0.95; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+.workScatter__count{ font-size: 0.35em; vertical-align: super; margin-left: 0.15em; opacity: 0.7; font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+.workScatter__cta{ position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); z-index: 21; pointer-events: auto; }
+.workScatter__pill{ display: inline-flex; gap: 14px; align-items: center; border: 0; border-radius: 999px; padding: 10px 14px; background: rgba(0,0,0,0.86); color: #fff; font: inherit; cursor: pointer; }
 .workScatter__pill .muted{ opacity: 0.75; }
-
-.workScatter__stage{
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-}
-
-.workTile{
-  position: absolute;
-  left: 0;
-  top: 0;
-
-  width: min(420px, 26vw);
-  aspect-ratio: 5 / 5;
-
-  display: block;
-  opacity: 1;
-
-  transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.55);
-  will-change: transform, opacity;
-  z-index: 2;
-  filter: saturate(0.98);
-}
-
-.workTile img{
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  border-radius: 2px;
-}
-
-.workTile[style*="z-index: 999"] img{
-  border-radius: 0px;
-}
-
-.workStory{
-  background: #050506;
-  color: rgba(255,255,255,.22);
-}
-
-.workStory__scroll{
-  height: 360vh;
-}
-
-.workStory__sticky{
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
-
-.workStory__inner{
-  position: relative;
-  width: min(980px, 88vw);
-  height: 100vh;
-}
-
-.workStep{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) translateY(18px);
-  opacity: 0;
-  visibility: hidden;      /* evita “fantasmas” */
-  pointer-events: none;   
-  transition: opacity 260ms linear, transform 420ms cubic-bezier(.2,.8,.2,1), visibility 0s linear 260ms;
-  will-change: opacity, transform;
-  text-align: left;
-}
-
-.workStep__index{
-  display: inline-block;
-  font-size: 44px;
-  letter-spacing: .18em;
-  opacity: 1;
-  margin-bottom: 12px;
-  color: rgba(255,255,255,.18);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-}
-
-.workStep__title{
-  font-size: clamp(56px, 7vw, 83px);
-  line-height: 0.95;
-  margin: 0 0 16px;
-  color: rgba(255,255,255,.18);
-  transition: color 0.15s linear;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-}
-
-.workStep__body{
-  margin: 0;
-  max-width: 56ch;
-  font-size: clamp(18px, 1.5vw, 26px);
-  line-height: 1.5;
-  color: rgba(255,255,255,.28);
-  transition: color 0.15s linear;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-}
-
-
-/* cuando está activo, se pone “blanco” */
-.workStep.isActive{
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translate(-50%, -50%) translateY(0px);
-  transition: opacity 260ms linear, transform 420ms cubic-bezier(.2,.8,.2,1), visibility 0s;
-}
-
-/* los que ya pasaron quedan más apagados */
-.workStep.isPast{
-  opacity: 0.12;
-  visibility: visible;
-  transform: translate(-50%, -50%) translateY(-10px);
-}
-
-/* =========================
-   Responsive overrides
-   Pegalo al final del <style>
-========================= */
+.workScatter__stage{ position: absolute; inset: 0; z-index: 5; }
+.workTile{ position: absolute; left: 0; top: 0; width: min(420px, 26vw); aspect-ratio: 5 / 5; display: block; opacity: 1; transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.55); will-change: transform, opacity; z-index: 2; filter: saturate(0.98); }
+.workTile img{ width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 2px; }
+.workTile[style*="z-index: 999"] img{ border-radius: 0px; }
+.workStory{ background: #050506; color: rgba(255,255,255,.22); }
+.workStory__scroll{ height: 360vh; }
+.workStory__sticky{ position: sticky; top: 0; height: 100vh; display: grid; place-items: center; overflow: hidden; }
+.workStory__inner{ position: relative; width: min(980px, 88vw); height: 100vh; }
+.workStep{ position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) translateY(18px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 260ms linear, transform 420ms cubic-bezier(.2,.8,.2,1), visibility 0s linear 260ms; will-change: opacity, transform; text-align: left; }
+.workStep__index{ display: inline-block; font-size: 44px; letter-spacing: .18em; opacity: 1; margin-bottom: 12px; color: rgba(255,255,255,.18); font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+.workStep__title{ font-size: clamp(56px, 7vw, 83px); line-height: 0.95; margin: 0 0 16px; color: rgba(255,255,255,.18); transition: color 0.15s linear; font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+.workStep__body{ margin: 0; max-width: 56ch; font-size: clamp(18px, 1.5vw, 26px); line-height: 1.5; color: rgba(255,255,255,.28); transition: color 0.15s linear; font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+.workStep.isActive{ opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, -50%) translateY(0px); transition: opacity 260ms linear, transform 420ms cubic-bezier(.2,.8,.2,1), visibility 0s; }
+.workStep.isPast{ opacity: 0.12; visibility: visible; transform: translate(-50%, -50%) translateY(-10px); }
 
 /* iOS / mobile viewport fix */
-.workScatter__sticky,
-.workStory__sticky {
-  height: 100svh;
-}
-@supports (height: 100dvh) {
-  .workScatter__sticky,
-  .workStory__sticky {
-    height: 100dvh;
-  }
-}
+.workScatter__sticky, .workStory__sticky { height: 100svh; }
+@supports (height: 100dvh) { .workScatter__sticky, .workStory__sticky { height: 100dvh; } }
+.workTile { width: min(420px, 28vw); aspect-ratio: 1 / 1; }
 
-/* Stage y tiles: evita “oversize” en mobile */
-.workTile {
-  /* base más flexible */
-  width: min(420px, 28vw);
-  aspect-ratio: 1 / 1;
-}
-
-/* ---- <= 1024px (tablet / laptop chico) ---- */
 @media (max-width: 1024px) {
-  .workScatter__scroll { height: 320vh; }
-  .workStory__scroll   { height: 320vh; }
-
-  .workScatter__title {
-    top: 50%;
-    font-size: clamp(44px, 7.2vw, 86px);
-    letter-spacing: -0.035em;
-    text-align: center;
-    width: 90vw;
-    white-space: normal; /* por si el título es largo */
-  }
-
-  .workScatter__cta {
-    bottom: 28px;
-  }
-
-  .workTile {
-    width: min(360px, 34vw);
-    transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.62);
-  }
-
-  .workStory__inner {
-    width: min(860px, 90vw);
-  }
-
-  .workStep__index { font-size: 34px; }
-  .workStep__title { font-size: clamp(44px, 6.2vw, 72px); }
-  .workStep__body  { font-size: clamp(16px, 2.2vw, 22px); max-width: 52ch; }
+  .workScatter__scroll { height: 320vh; } .workStory__scroll { height: 320vh; }
+  .workScatter__title { top: 50%; font-size: clamp(44px, 7.2vw, 86px); letter-spacing: -0.035em; text-align: center; width: 90vw; white-space: normal; }
+  .workScatter__cta { bottom: 28px; }
+  .workTile { width: min(360px, 34vw); transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.62); }
+  .workStory__inner { width: min(860px, 90vw); }
+  .workStep__index { font-size: 34px; } .workStep__title { font-size: clamp(44px, 6.2vw, 72px); } .workStep__body { font-size: clamp(16px, 2.2vw, 22px); max-width: 52ch; }
 }
 
-/* ---- <= 768px (tablet vertical / mobile grande) ---- */
 @media (max-width: 768px) {
-  .workScatter__scroll { height: 280vh; }
-  .workStory__scroll   { height: 280vh; }
-
-  .workScatter__title {
-    top: 48%;
-    font-size: clamp(34px, 9vw, 64px);
-    letter-spacing: -0.03em;
-    line-height: 0.98;
-    width: 92vw;
-  }
-
-  .workScatter__cta {
-    bottom: 18px;
-  }
-
-  .workScatter__pill {
-    gap: 10px;
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-
-  .workTile {
-    width: min(300px, 58vw);
-    transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.72);
-  }
-
-  .workTile img {
-    border-radius: 10px; /* un poquito más “mobile-friendly” */
-  }
-
-  /* Story: centrado y más respirado */
-  .workStory__inner {
-    width: min(680px, 92vw);
-    height: 100%;
-    padding: 0 2vw;
-  }
-
-  .workStep {
-    text-align: left;
-  }
-
-  .workStep__index {
-    font-size: 22px;
-    margin-bottom: 10px;
-    letter-spacing: .14em;
-  }
-
-  .workStep__title {
-    font-size: clamp(34px, 9vw, 56px);
-    margin: 0 0 12px;
-    line-height: 1.0;
-  }
-
-  .workStep__body {
-    font-size: 16px;
-    line-height: 1.55;
-    max-width: 44ch;
-  }
-
-  .workStep.isPast {
-    opacity: 0.08;
-  }
+  .workScatter__scroll { height: 280vh; } .workStory__scroll { height: 280vh; }
+  .workScatter__title { top: 48%; font-size: clamp(34px, 9vw, 64px); letter-spacing: -0.03em; line-height: 0.98; width: 92vw; }
+  .workScatter__cta { bottom: 18px; }
+  .workScatter__pill { gap: 10px; padding: 10px 12px; font-size: 14px; }
+  .workTile { width: min(300px, 58vw); transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.72); }
+  .workTile img { border-radius: 10px; }
+  .workStory__inner { width: min(680px, 92vw); height: 100%; padding: 0 2vw; }
+  .workStep__index { font-size: 22px; margin-bottom: 10px; letter-spacing: .14em; }
+  .workStep__title { font-size: clamp(34px, 9vw, 56px); margin: 0 0 12px; line-height: 1.0; }
+  .workStep__body { font-size: 16px; line-height: 1.55; max-width: 44ch; }
+  .workStep.isPast { opacity: 0.08; }
 }
 
-/* ---- <= 420px (mobile chico) ---- */
 @media (max-width: 420px) {
-  .workScatter__scroll { height: 260vh; }
-  .workStory__scroll   { height: 260vh; }
-
-  .workScatter__title {
-    font-size: 40px; /* fija para evitar saltos raros */
-    width: 92vw;
-  }
-
-  .workScatter__cta {
-    bottom: 14px;
-  }
-
-  .workScatter__pill {
-    padding: 9px 11px;
-    font-size: 13px;
-  }
-
-  .workTile {
-    width: 78vw;
-    transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.78);
-  }
-
-  .workStep__title {
-    font-size: 40px;
-  }
-
-  .workStep__body {
-    font-size: 15px;
-    max-width: 40ch;
-  }
+  .workScatter__scroll { height: 260vh; } .workStory__scroll { height: 260vh; }
+  .workScatter__title { font-size: 40px; width: 92vw; }
+  .workScatter__cta { bottom: 14px; } .workScatter__pill { padding: 9px 11px; font-size: 13px; }
+  .workTile { width: 78vw; transform: translate3d(50vw,50vh,0) translate(-50%, -50%) scale(0.78); }
+  .workStep__title { font-size: 40px; } .workStep__body { font-size: 15px; max-width: 40ch; }
 }
 
-/* Reduced motion: no marear */
 @media (prefers-reduced-motion: reduce) {
-  .workStep,
-  .workStep.isActive,
-  .workStep.isPast,
-  .workScatter__black {
-    transition: none !important;
-  }
+  .workStep, .workStep.isActive, .workStep.isPast, .workScatter__black { transition: none !important; }
 }
 </style>

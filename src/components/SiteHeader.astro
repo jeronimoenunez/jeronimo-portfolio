@@ -1,8 +1,6 @@
 ---
 type NavItem = { label: string; href: string };
 
-import headerClientUrl from "../scripts/header.client.ts?url";
-
 const {
   brand = "JERÓNIMO NÚÑEZ",
   leftNav = [
@@ -34,9 +32,7 @@ const {
       <ul class="vh__list">
         {leftNav.map((item) => (
           <li class="vh__item">
-            <a class="vh__link" href={item.href}>
-              {item.label}
-            </a>
+            <a class="vh__link" href={item.href}>{item.label}</a>
           </li>
         ))}
       </ul>
@@ -44,9 +40,7 @@ const {
 
     <div class="vh__meta" aria-label="Context">
       <span class="vh__metaItem">
-        <time class="vh__time" datetime="" data-vh-time>
-          {time}
-        </time>
+        <time class="vh__time" datetime="" data-vh-time>{time}</time>
       </span>
       <span class="vh__dot" aria-hidden="true">•</span>
       <span class="vh__metaItem">{location}</span>
@@ -56,9 +50,7 @@ const {
       <ul class="vh__list">
         {rightNav.map((item) => (
           <li class="vh__item">
-            <a class="vh__link vh__link--cta" href={item.href}>
-              {item.label}
-            </a>
+            <a class="vh__link vh__link--cta" href={item.href}>{item.label}</a>
           </li>
         ))}
       </ul>
@@ -81,22 +73,24 @@ const {
           <span class="vh__panelValue">{location}</span>
         </div>
       </div>
-
       <nav class="vh__panelNav" aria-label="Menu">
         <ul class="vh__panelList">
           {[...leftNav, ...rightNav].map((item) => (
             <li class="vh__panelItem">
-              <a class="vh__panelLink" href={item.href} data-vh-close>
-                {item.label}
-              </a>
+              <a class="vh__panelLink" href={item.href} data-vh-close>{item.label}</a>
             </li>
           ))}
         </ul>
       </nav>
     </div>
   </div>
+</header>
 
-  <style>
+<script>
+  import "../scripts/header.client.ts";
+</script>
+
+<style>
     /* (tu CSS tal cual, no lo toco) */
     :global(:root){
       --vh-font: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -284,7 +278,3 @@ const {
       .vh__link{ transition: none; }
     }
   </style>
-
-  <!-- ✅ script bundleado (no inline) -->
-  <script type="module" src={headerClientUrl}></script>
-</header>

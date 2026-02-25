@@ -1,6 +1,7 @@
 ---
 import SiteHeader from "@/components/SiteHeader.astro";
-const { title = "Jeronimo Nunez | Frontend Engineer", lang = "es" } = Astro.props;
+// He añadido un favicon y descripción básica para SEO
+const { title = "Jerónimo Núñez | Frontend Engineer", lang = "es" } = Astro.props;
 ---
 
 <!doctype html>
@@ -8,12 +9,14 @@ const { title = "Jeronimo Nunez | Frontend Engineer", lang = "es" } = Astro.prop
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Frontend Engineer especializado en arquitectura de producto y sistemas escalables." />
     <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
 
   <body id="inicio">
     <SiteHeader
-    brand="JERÓNIMO NÚÑEZ"
+      brand="JERÓNIMO NÚÑEZ"
       location="La Plata, AR"
       leftNav={[
         { label: "Home", href: "#inicio" },
@@ -26,5 +29,14 @@ const { title = "Jeronimo Nunez | Frontend Engineer", lang = "es" } = Astro.prop
     />
 
     <slot />
+
+    <style is:global>
+      html {
+        scroll-behavior: smooth;
+        /* ✅ IMPORTANTE: Ajusta esto según la altura de tu header 
+           para que las anclas no queden tapadas */
+        scroll-padding-top: 80px; 
+      }
+    </style>
   </body>
 </html>

@@ -9,9 +9,9 @@ import { projects } from "../content/projects";
 import { works, workMotion } from "../domain/works";
 ---
 
-<BaseLayout title="Jeronimo Nunez | Frontend Engineer" lang="es">
-  <main id="inicio">
-    <section id="hero" aria-label="Hero">
+<BaseLayout title="Jerónimo Núñez | Frontend Engineer" lang="es">
+  <main>
+    <section aria-label="Hero">
       <HeroVertical />
     </section>
 
@@ -28,11 +28,11 @@ import { works, workMotion } from "../domain/works";
       />
     </section>
 
-    <section id="projects" aria-label="Projects">
+    <section id="projects" aria-label="Proyectos">
       <WorkScatter title="Proyectos" works={works} motion={workMotion} />
     </section>
 
-    <section id="contact" aria-label="Contact">
+    <section id="contact" aria-label="Contacto">
       <Footer />
     </section>
   </main>

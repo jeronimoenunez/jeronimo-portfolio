@@ -2,8 +2,6 @@
 import type { Project } from "../../content/projects";
 import ProjectSlide from "../ui/ProjectSlide.astro";
 
-// ❌ ELIMINAMOS el import con ?url que causaba el error de MIME type
-
 const {
   sectionNo = "03",
   label = "SELECTED WORKS",
@@ -34,6 +32,7 @@ const {
 </section>
 
 <script>
+  // ✅ Cambio crítico: de ?url a import nativo
   import "../../scripts/scroll/selectedWorks.client.ts";
 </script>
 
