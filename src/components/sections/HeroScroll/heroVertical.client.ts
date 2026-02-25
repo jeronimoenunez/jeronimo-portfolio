@@ -49,29 +49,19 @@ function main() {
 
   if (!universe || !copy || !overlay || !videoSlot) return;
 
-  // Actos (Acto 3 puede estar en el overlay normal o dentro del video)
   const act1El = root.querySelector<HTMLElement>('[data-act="1"]');
   const act2El = root.querySelector<HTMLElement>('[data-act="2"]');
-
-  // Si moviste acto 3 dentro del video: <div data-act3-inside>...</div>
   const act3Inside = root.querySelector<HTMLElement>("[data-act3-inside]");
-  // Si acto 3 sigue en el overlay: <div data-act="3">
   const act3El = root.querySelector<HTMLElement>('[data-act="3"]');
 
-  // prioridad: si existe dentro del video, usamos ese
   const act3Target: HTMLElement | null = act3Inside ?? act3El;
-
-  // Botones (solo acto 1)
   const actions = root.querySelector<HTMLElement>("[data-actions]");
 
-  // Celdas
   const r1a = root.querySelector<HTMLElement>(".cell--r1a");
   const r1b = root.querySelector<HTMLElement>(".cell--r1b");
-
   const r2a = root.querySelector<HTMLElement>(".cell--r2a");
   const r2v = root.querySelector<HTMLElement>(".cell--videoSlot");
   const r2c = root.querySelector<HTMLElement>(".cell--r2c");
-
   const r3a = root.querySelector<HTMLElement>(".cell--r3a");
   const r3b = root.querySelector<HTMLElement>(".cell--r3b");
 
@@ -81,15 +71,12 @@ function main() {
   const act1End = 0.18;
   const act2End = 0.64;
   const act3Start = 0.52;
-
   const OVERSCAN = 1.14;
-  const OUT_TOP_PX = -12; // fila 1 debe quedar "fuera"
+  const OUT_TOP_PX = -12;
 
   /* -------------- Video scrub --------------- */
   const encStart = 0.10;
   const encEnd = 0.38;
-
-  const VIDEO_SPEED = 0.72;
 
   useHeroHorizontalScroll(root, {
     range: { from: 0.02, to: 0.94 },
@@ -105,8 +92,6 @@ function main() {
 
   /* -------------- Measurements -------------- */
   let slotRect: DOMRect | null = null;
-
-  // Acto 3 framing
   let scaleFinal = 1;
   let tyFinal = 0;
 
@@ -119,45 +104,25 @@ function main() {
 
     slotRect = videoSlot.getBoundingClientRect();
 
-    const row1 = rectUnion(
-      toRect(r1a.getBoundingClientRect()),
-      toRect(r1b.getBoundingClientRect())
-    );
-
-    const row2 = rectUnion(
-      rectUnion(toRect(r2a.getBoundingClientRect()), toRect(r2v.getBoundingClientRect())),
-      toRect(r2c.getBoundingClientRect())
-    );
-
-    const row3 = rectUnion(
-      toRect(r3a.getBoundingClientRect()),
-      toRect(r3b.getBoundingClientRect())
-    );
-
+    const row1 = rectUnion(toRect(r1a.getBoundingClientRect()), toRect(r1b.getBoundingClientRect()));
+    const row2 = rectUnion(rectUnion(toRect(r2a.getBoundingClientRect()), toRect(r2v.getBoundingClientRect())), toRect(r2c.getBoundingClientRect()));
+    const row3 = rectUnion(toRect(r3a.getBoundingClientRect()), toRect(r3b.getBoundingClientRect()));
     const row23 = rectUnion(row2, row3);
     const vh = window.innerHeight;
 
-    // A) fill: row2+row3 = 100vh
     const sFill = vh / rectHeight(row23);
-
-    // B) hide: row1 queda fuera (origin bottom en acto 3)
     const denom = Math.max(1, row23.bottom - row1.bottom);
     const sHide = (vh - OUT_TOP_PX) / denom;
 
     scaleFinal = Math.max(1, sFill, sHide);
-
-    // ty para pegar bottom de row23 al bottom del viewport con origin bottom
     tyFinal = Math.round(-(row23.bottom - vh) * scaleFinal);
 
     universe.style.transform = prev;
     universe.style.transformOrigin = prevOrigin;
   };
 
-  measure();
-
   let raf: number | null = null;
 
-  // helper: set acto (solo opacity/translate; no toca tu scroll)
   const setAct = (el: HTMLElement | null, alpha: number) => {
     if (!el) return;
     const a = clamp01(alpha);
@@ -168,27 +133,16 @@ function main() {
 
   const apply = () => {
     raf = null;
-    if (!slotRect) measure();
+    if (!slotRect || slotRect.width === 0) measure();
 
     const p = getProgress(root);
-
-    const t2 = easeInOutQuint(
-      smoothstep(clamp01((p - act1End) / (act2End - act1End)))
-    );
-
+    const t2 = easeInOutQuint(smoothstep(clamp01((p - act1End) / (act2End - act1End))));
     const t3raw = clamp01((p - act3Start) / (1 - act3Start));
     const t3 = easeInOutQuint(smoothstep(t3raw));
-
-    // ✅ UN SOLO hasActs
     const hasActs = !!(act1El || act2El || act3Target);
 
-    /* -------- COPY --------
-       Si NO hay actos: aplicamos tu fade original al contenedor.
-       Si hay actos: mantenemos contenedor visible y fadeamos solo los actos.
-    */
     if (!hasActs) {
-      const copyFade =
-        1 - smoothstep(clamp01((p - act1End * 0.55) / (act1End * 0.65)));
+      const copyFade = 1 - smoothstep(clamp01((p - act1End * 0.55) / (act1End * 0.65)));
       copy.style.opacity = String(copyFade);
       copy.style.transform = `translate3d(0, ${lerp(0, -10, 1 - copyFade)}px, 0)`;
     } else {
@@ -196,60 +150,33 @@ function main() {
       copy.style.transform = "translate3d(0,0,0)";
     }
 
-    /* -------- ACTOS 1/2/3 -------- */
     if (hasActs) {
-      // 1 -> 2 rápido
-      const a1 =
-        1 - smoothstep(clamp01((p - (act1End * 0.55)) / (act1End * 0.45)));
-
+      const a1 = 1 - smoothstep(clamp01((p - (act1End * 0.55)) / (act1End * 0.45)));
       const a2In = smoothstep(clamp01((p - (act1End * 0.50)) / 0.08));
-
-      // 2 -> 3 rápido (más seguido)
-      const act3InAt = act3Start + 0.0;
-      const act3InDur = 0.045;
-
-      // 3 se desvanece antes del final para dejar mosaico limpio
-      const act3OutAt = 0.80;
-      const act3OutDur = 0.06;
-
-      const a3In = smoothstep(clamp01((p - act3InAt) / act3InDur));
-      const a3Out = 1 - smoothstep(clamp01((p - act3OutAt) / act3OutDur));
+      const a3In = smoothstep(clamp01((p - act3Start) / 0.045));
+      const a3Out = 1 - smoothstep(clamp01((p - 0.80) / 0.06));
       const a3 = a3In * a3Out;
-
-      // Acto 2 sale apenas empieza 3
-      const act2OutAt = act3Start - 0.12;
-      const act2OutDur = 0.04;
-
-      const a2Out =
-        1 - smoothstep(clamp01((p - act2OutAt) / act2OutDur));
-
+      const a2Out = 1 - smoothstep(clamp01((p - (act3Start - 0.12)) / 0.04));
       const a2 = a2In * a2Out;
 
       setAct(act1El, a1);
       setAct(act2El, a2);
       setAct(act3Target, a3);
 
-      // Botones SOLO en acto 1
       if (actions) {
         const show = a1 > 0.6;
         actions.style.opacity = show ? "1" : "0";
-        actions.style.transform = show
-          ? "translate3d(0,0,0)"
-          : "translate3d(0,6px,0)";
+        actions.style.transform = show ? "translate3d(0,0,0)" : "translate3d(0,6px,0)";
         actions.style.pointerEvents = show ? "auto" : "none";
       }
     }
 
-    /* -------- Acto 1/2: fullscreen sobre el video slot -------- */
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-
     const cover = Math.max(vw / slotRect!.width, vh / slotRect!.height);
     const scaleStart = cover * OVERSCAN;
-
     const slotCx = slotRect!.left + slotRect!.width / 2;
     const slotCy = slotRect!.top + slotRect!.height / 2;
-
     const txStart = vw / 2 - slotCx;
     const tyStart = vh / 2 - slotCy;
 
@@ -258,48 +185,36 @@ function main() {
     let ty = lerp(tyStart, 0, t2);
 
     if (p <= act1End) {
-      scale = scaleStart;
-      tx = txStart;
-      ty = tyStart;
+      scale = scaleStart; tx = txStart; ty = tyStart;
     }
 
-    /* -------- Acto 3: SOLO ACÁ cambiamos origin y hacemos fill -------- */
-    const inAct3 = t3raw > 0;
-
-    if (inAct3) {
+    if (t3raw > 0) {
       universe.style.transformOrigin = "50% 100%";
-
-      const s3 = lerp(1, scaleFinal, t3);
-      scale = scale * s3;
-
+      scale = scale * lerp(1, scaleFinal, t3);
       ty = lerp(ty, tyFinal, t3);
     } else {
       universe.style.transformOrigin = "50% 50%";
     }
 
     universe.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`;
-
-    /* -------- Overlay -------- */
-    const tt =
-      p <= act1End ? 0 : smoothstep(clamp01((p - act1End) / (1 - act1End)));
+    const tt = p <= act1End ? 0 : smoothstep(clamp01((p - act1End) / (1 - act1End)));
     overlay.style.opacity = String(lerp(0.58, 0.38, tt));
   };
 
-  const onScroll = () => {
-    if (raf !== null) return;
-    raf = requestAnimationFrame(apply);
-  };
-
-  const onResize = () => {
-    slotRect = null;
-    measure();
-    onScroll();
-  };
+  const onScroll = () => { if (raf === null) raf = requestAnimationFrame(apply); };
+  const onResize = () => { slotRect = null; measure(); apply(); };
 
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onResize);
-
+  
+  // Ejecución inicial
+  measure();
   apply();
 }
 
-main();
+// DISPARADOR DE SEGURIDAD PARA CLOUDFLARE/PRODUCCIÓN
+if (document.readyState === "complete") {
+  main();
+} else {
+  window.addEventListener("load", main);
+}

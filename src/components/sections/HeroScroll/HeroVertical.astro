@@ -1,23 +1,18 @@
 ---
-import heroClientUrl from "./heroVertical.client.ts?url";
-
+// Eliminamos la importación con ?url que causaba el error de MIME type en Cloudflare
 const VIDEO_URL = "https://assets.jeronimonunez.com/video/backgroundHero.mp4";
 ---
 
 <section class="hero" data-hero aria-label="Hero">
   <div class="sticky" data-sticky>
     <div class="stage" data-stage>
-      <!-- UNIVERSE -->
       <div class="universe" data-universe>
         <div class="grid isUniverse" data-grid aria-hidden="true">
-          <!-- row 1 -->
           <div class="cell cell--r1a cell--plate"></div>
           <div class="cell cell--r1b cell--plate"></div>
 
-          <!-- row 2 -->
           <div class="cell cell--r2a cell--plate"></div>
 
-          <!-- VIDEO SLOT -->
           <div class="cell cell--videoSlot" data-video-slot>
             <div class="videoWrap" data-video-wrap>
               <video
@@ -49,13 +44,11 @@ const VIDEO_URL = "https://assets.jeronimonunez.com/video/backgroundHero.mp4";
 
           <div class="cell cell--r2c cell--plate"></div>
 
-          <!-- row 3 -->
           <div class="cell cell--r3a cell--plate"></div>
           <div class="cell cell--r3b cell--plate"></div>
         </div>
       </div>
 
-      <!-- COPY -->
       <div class="copy" data-copy>
         <div class="act act--1 isActive" data-act="1">
           <p class="eyebrow">UX/UI | Arquitectura Frontend | Security-by-Design</p>
@@ -85,7 +78,9 @@ const VIDEO_URL = "https://assets.jeronimonunez.com/video/backgroundHero.mp4";
   </div>
 </section>
 
-<script type="module" src={heroClientUrl}></script>
+<script>
+  import "./heroVertical.client.ts";
+</script>
 
 <style>
 /* =========================
