@@ -4,6 +4,7 @@ const { project } = Astro.props as { project: Project };
 
 const imgSrc = project?.image?.src ?? "";
 const imgAlt = project?.image?.alt ?? project.title ?? "";
+const repoUrl = project?.repo?.trim() ? project.repo : null;
 ---
 
 <article class="swSlide" data-sw-slide>
@@ -26,6 +27,21 @@ const imgAlt = project?.image?.alt ?? project.title ?? "";
           />
         ) : null}
       </div>
+
+      {project.description ? (
+        <p class="swDescription">{project.description}</p>
+      ) : null}
+
+      {repoUrl ? (
+        <a
+          class="swRepo"
+          href={repoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ver repositorio ↗
+        </a>
+      ) : null}
 
       <div class="swMeta">
         <span class="swMeta__left">{project.category}</span>
@@ -104,6 +120,33 @@ const imgAlt = project?.image?.alt ?? project.title ?? "";
     width: 100%;
     height: auto;
     transform: scale(1.02);
+  }
+
+  .swDescription {
+    max-width: 70ch;
+    margin: 18px auto 0;
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    line-height: 1.55;
+    opacity: 0.82;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .swRepo {
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    margin-top: 14px;
+    font-size: clamp(0.9rem, 1.6vw, 1rem);
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .swRepo:hover {
+    opacity: 0.7;
   }
 
   .swMeta {
